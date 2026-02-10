@@ -1,5 +1,10 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { useState } from "react";
-import ReviewerDashboard from "./components/ReviewerDashboard";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import JournalDetail from "./pages/JournalDetail";
+import ReviewerDashboard from "./pages/ReviewerDashboard";
+import CreateJournal from "./pages/CreateJournal";
 
 function App() {
   const mockUsers = [
@@ -140,106 +145,35 @@ function App() {
     },
   ];
 
-  // State management
   const [currentUser, setCurrentUser] = useState(mockUsers[4]);
-  const [selectedJournal, setSelectedJournal] = useState(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showReviewerDashboard, setShowReviewerDashboard] = useState(false);
-
-  // Filter journals based on user role
-  const acceptedJournals = mockJournals.filter((j) => j.status === "approved");
-  const canAddJournal = currentUser.role === "writer";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* User switcher for testing */}
-      <div className="bg-gray-800 text-white p-4 mb-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="font-semibold">Current User: </span>
-              <span>{currentUser.name}</span>
-              <span className="ml-2 px-2 py-1 bg-blue-600 rounded text-sm">
-                {currentUser.role}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              {mockUsers.map((user) => (
-                <button
-                  key={user.id}
-                  onClick={() => setCurrentUser(user)}
-                  className={`px-3 py-1 rounded text-sm transition ${
-                    user.id === currentUser.id
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
-                >
-                  {user.role}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar currentUser={currentUser} mockUsers={mockUsers} setCurrentUser={setCurrentUser} />
+        
+        <Routes>
+          <Route path="/" element={<Home journals={mockJournals} currentUser={currentUser} />} />
+          <Route path="/journal/:id" element={<JournalDetail journals={mockJournals} />} />
+          <Route 
+            path="/reviewer-dashboard" 
+            element={
+              currentUser.role === "reviewer" || currentUser.role === "admin" 
+                ? <ReviewerDashboard journals={mockJournals} /> 
+                : <Navigate to="/" replace />
+            } 
+          />
+          <Route 
+            path="/create" 
+            element={
+              currentUser.role === "writer" 
+                ? <CreateJournal /> 
+                : <Navigate to="/" replace />
+            } 
+          />
+        </Routes>
       </div>
-      {/* controls */}
-      {currentUser.role === "reviewer" && (
-        <div>
-          {!showReviewerDashboard && (
-            <button onClick={() => setShowReviewerDashboard(true)}>
-              Reviewer Dashboard
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* General Journal Display */}
-      {showReviewerDashboard ? (
-        <ReviewerDashboard journalsToRev={mockJournals.filter(journal => journal.status == "pending")}/>
-      ) : selectedJournal ? (
-        <div className="max-w-3xl mx-auto p-4">
-          <h1 className="text-2xl font-bold mb-2">{selectedJournal.title}</h1>
-          <p className="text-gray-600 mb-4">{selectedJournal.author_name}</p>
-
-          <div>
-            <h2>Abstract</h2>
-            <p>{selectedJournal.abstract}</p>
-          </div>
-
-          <div>
-            <h2>Content</h2>
-            <p>{selectedJournal.content}</p>
-          </div>
-
-          <button
-            onClick={() => setSelectedJournal(null)}
-            className="mb-4 px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-          >
-            ← Back
-          </button>
-        </div>
-      ) : (
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-            {acceptedJournals.map((journal) => (
-              <div
-                key={journal.id}
-                className="bg-white shadow-md shadow-black/10 rounded-lg p-4 cursor-pointer hover:shadow-lg hover:bg-gray-50 transition"
-                onClick={() => setSelectedJournal(journal)}
-              >
-                <h2 className="text-lg font-semibold mb-2">{journal.title}</h2>
-                <p className="text-gray-600">{journal.author_name}</p>
-              </div>
-            ))}
-          </div>
-
-          {currentUser.role === "writer" && (
-            <button className="bg-green-500 p-4 rounded-lg">
-              Add your own journal
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    </BrowserRouter>
   );
 }
 

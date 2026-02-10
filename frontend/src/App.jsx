@@ -6,6 +6,7 @@ import JournalDetail from "./pages/JournalDetail";
 import ReviewerDashboard from "./pages/ReviewerDashboard";
 import CreateJournal from "./pages/CreateJournal";
 import Admindashboard from "./pages/AdminDashboard";
+import ReviewJournal from "./pages/ReviewJournal";
 
 function App() {
   const mockUsers = [
@@ -180,7 +181,7 @@ function App() {
             path="/admin-dashboard"
             element={
               currentUser.role == "admin" ? (
-                <Admindashboard journals={mockJournals}/>
+                <Admindashboard journals={mockJournals} />
               ) : (
                 <Navigate to="/" replace />
               )
@@ -191,6 +192,16 @@ function App() {
             element={
               currentUser.role === "writer" ? (
                 <CreateJournal />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/review/:id"
+            element={
+              currentUser.role == "reviewer" || currentUser.role == "admin" ? (
+                <ReviewJournal journals={mockJournals} />
               ) : (
                 <Navigate to="/" replace />
               )

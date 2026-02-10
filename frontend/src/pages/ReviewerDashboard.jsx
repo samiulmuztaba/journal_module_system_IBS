@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 export default function ReviewerDashboard({ journals }) {
   const pendingJournals = journals.filter((j) => j.status === "pending");
 
@@ -16,9 +17,10 @@ export default function ReviewerDashboard({ journals }) {
               <p className="text-sm text-gray-500 mb-3">
                 Submitted: {new Date(journal.submitted_at).toLocaleString()}
               </p>
+              <Link to={`/review/${journal.id}`}>
               <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Review
-              </button>
+              </button></Link>
             </div>
           ))}
         </div>

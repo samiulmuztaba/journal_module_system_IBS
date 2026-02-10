@@ -10,7 +10,7 @@ export default function Navbar({ currentUser, mockUsers, setCurrentUser }) {
           <div className="flex gap-4">
             <Link to="/" className="hover:text-blue-400">Home</Link>
             {(currentUser.role === "reviewer" || currentUser.role === "admin") && (
-              <Link to="/reviewer-dashboard" className="hover:text-blue-400">
+              <Link to={currentUser.role == "reviewer" ? "/reviewer-dashboard" : "/admin-dashboard" } className="hover:text-blue-400">
                 Dashboard
               </Link>
             )}

@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import JournalDetail from "./pages/JournalDetail";
 import ReviewerDashboard from "./pages/ReviewerDashboard";
 import CreateJournal from "./pages/CreateJournal";
+import Admindashboard from "./pages/AdminDashboard";
 
 function App() {
   const mockUsers = [
@@ -150,26 +151,50 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
-        <Navbar currentUser={currentUser} mockUsers={mockUsers} setCurrentUser={setCurrentUser} />
-        
+        <Navbar
+          currentUser={currentUser}
+          mockUsers={mockUsers}
+          setCurrentUser={setCurrentUser}
+        />
+
         <Routes>
-          <Route path="/" element={<Home journals={mockJournals} currentUser={currentUser} />} />
-          <Route path="/journal/:id" element={<JournalDetail journals={mockJournals} />} />
-          <Route 
-            path="/reviewer-dashboard" 
-            element={
-              currentUser.role === "reviewer" || currentUser.role === "admin" 
-                ? <ReviewerDashboard journals={mockJournals} /> 
-                : <Navigate to="/" replace />
-            } 
+          <Route
+            path="/"
+            element={<Home journals={mockJournals} currentUser={currentUser} />}
           />
-          <Route 
-            path="/create" 
+          <Route
+            path="/journal/:id"
+            element={<JournalDetail journals={mockJournals} />}
+          />
+          <Route
+            path="/reviewer-dashboard"
             element={
-              currentUser.role === "writer" 
-                ? <CreateJournal /> 
-                : <Navigate to="/" replace />
-            } 
+              currentUser.role === "reviewer" ? (
+                <ReviewerDashboard journals={mockJournals} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              currentUser.role == "admin" ? (
+                <Admindashboard journals={mockJournals}/>
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/create"
+            element={
+              currentUser.role === "writer" ? (
+                <CreateJournal />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
           />
         </Routes>
       </div>

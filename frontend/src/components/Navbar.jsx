@@ -11,9 +11,15 @@ export default function Navbar({ currentUser, onLogout }) {
           <p>Home</p>
         </Link>
         {!currentUser ? (
+          <div className="flex flex-row gap-4">
           <Link to="/login">
             <p>Login</p>
           </Link>
+          
+          <Link to="/register">
+            <p>Register</p>
+          </Link>
+          </div>
         ) : (
           <div className="flex flex-row gap-4">
             <p>{currentUser.name}</p>

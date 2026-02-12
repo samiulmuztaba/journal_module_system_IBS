@@ -9,10 +9,12 @@ import Admindashboard from "./pages/AdminDashboard";
 import ReviewJournal from "./pages/ReviewJournal";
 import { api } from "./api/client";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [journals, setJournals] = useState([]);
+  const [loadingJournals, setLoadingJournals] = useState(true)
 
   const handleLogout = () => {
     setCurrentUser(null);
@@ -24,6 +26,7 @@ function App() {
         const data = await api.getJournals("approved");
         setJournals(data);
         console.log(data);
+        setLoadingJournals(false)
       } catch (err) {
         alert(err.message);
       }
@@ -33,15 +36,16 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen mb-15">
         <Navbar currentUser={currentUser} onLogout={handleLogout} />
 
         <Routes>
           <Route
             path="/"
-            element={<Home journals={journals} currentUser={currentUser} />}
+            element={<Home journals={journals} loadingJournals={loadingJournals} />}
           />
-          <Route path="/login" element={<Login onLogin={setCurrentUser} />} />
+          <Route path="/login" element={!currentUser ? <Login onLogin={setCurrentUser} /> : <Navigate to="/" />} />
+          <Route path="/register" element={!currentUser ? <Register onRegister={setCurrentUser}/> : <Navigate to="/" />}/>
           <Route
             path="/journal/:id"
             element={<JournalDetail journals={journals} />}
@@ -67,7 +71,7 @@ function App() {
             }
           />
           <Route
-            path="/create"
+            path="/create-journal"
             element={
               !currentUser || currentUser.role === "writer" ? (
                 <CreateJournal />

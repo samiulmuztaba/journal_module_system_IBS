@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../api/client";
+import { Link } from "react-router";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -23,9 +24,7 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div
-      className="flex justify-center align-middle"
-    >
+    <div className="flex justify-center align-middle">
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
       )}
@@ -74,6 +73,9 @@ export default function Login({ onLogin }) {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+        <p>
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </form>
     </div>
   );

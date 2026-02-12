@@ -68,7 +68,7 @@ export const api = {
   // ============ Journal Endpoints ============
   // Get all journals (with optional status filter)
   getJournals: async (status = null) => {
-    const url = status
+    const url = status == 'approved'
       ? `${API_BASE_URL}/api/journals?status=${status}`
       : `${API_BASE_URL}/api/journals`;
     const response = await fetch(url);

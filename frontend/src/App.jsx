@@ -22,8 +22,6 @@ function App() {
     setCurrentUser(null);
   };
 
-  if (currentUser) console.log(currentUser.role);
-
   useEffect(() => {
     const fetchJournals = async () => {
       try {

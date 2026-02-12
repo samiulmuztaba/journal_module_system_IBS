@@ -90,7 +90,7 @@ function App() {
               !currentUser || currentUser.role !== "admin" ? (
                 <Navigate to="/" replace />
               ) : (
-                <Admindashboard journals={allJournals} />
+                <Admindashboard journals={allJournals} currentUser={currentUser}/>
               )
             }
           />

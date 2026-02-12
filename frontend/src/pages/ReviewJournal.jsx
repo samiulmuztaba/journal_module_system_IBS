@@ -1,7 +1,8 @@
 import { useParams, Link, useNavigate } from "react-router";
 import { useState } from "react";
+import { api } from "../api/client";
 
-export default function ReviewJournal({ journals }) {
+export default function ReviewJournal({ journals, currentUser }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const journal = journals.find((j) => j.id === id);
@@ -9,14 +10,20 @@ export default function ReviewJournal({ journals }) {
   const [reviewComment, setReviewComment] = useState("");
   const [isApproved, setIsApproved] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log({
       journalId: id,
       comment: reviewComment,
       approved: isApproved,
+      reviewed_by: currentUser.id,
     });
     alert(`Journal ${isApproved ? "approved" : "rejected"}!`);
+    try {
+      const reviewSubmission = await api.submitReview(id, {"review_comment": reviewComment,
+  "approved": isApproved}, currentUser.id)
+      console.log(reviewSubmission)
+    } catch(err) {alert(err.message)}
     navigate("/reviewer-dashboard");
   };
 

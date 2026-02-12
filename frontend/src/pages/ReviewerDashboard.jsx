@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+
 export default function ReviewerDashboard({ journals }) {
   const pendingJournals = journals.filter((j) => j.status === "pending");
 

@@ -25,6 +25,9 @@ export default function Navbar({ currentUser, onLogout }) {
             <p>{currentUser.name}</p>
             <button onClick={onLogout}>Logout</button>
             {currentUser.role == 'admin' && <Link to="/admin-dashboard"><p>Admin Dashboard</p></Link>}
+            {currentUser.role == 'reviewer' && <Link to="/reviewer-dashboard"><p>Reviewer Dashboard</p></Link>}
+            {console.log(currentUser.role == 'writer')}
+            {currentUser.role == 'writer' && <Link to={`/author-dashboard/`}><p>Author Dashboard</p></Link>}
           </div>
         )}
         

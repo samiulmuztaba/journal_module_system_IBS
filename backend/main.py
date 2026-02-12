@@ -151,6 +151,43 @@ def create_journal(journal: schemas.JournalCreate, author_id: str, db: Session =
     db.refresh(db_journal)
     return db_journal
 
+@app.put('/api/journals/{journal_id}', response_model=schemas.Journal)
+def update_journal(
+    journal_id: str,
+    journal_data: schemas.JournalCreate,
+    user_id: str,
+    db: Session = Depends(get_db)
+):
+    """Update a journal entry, only the author or admin can do this. Resets review status."""
+    journal = db.query(models.Journal).filter(models.Journal.id == journal_id).first()
+    if not journal:
+        raise HTTPException(status_code=404, detail="Journal not found")
+    
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.role != 'admin' and journal.author_id != user_id:
+        raise HTTPException(status_code=403, detail="Only the author or admins can edit this journal")
+    
+    # Update journal fields
+    journal.title = journal_data.title
+    journal.abstract = journal_data.abstract
+    journal.content = journal_data.content
+    journal.tags = journal_data.tags
+    
+    # Reset review status when edited
+    journal.status = 'pending'
+    journal.reviewer_id = None
+    journal.reviewer_name = None
+    journal.review_comment = None
+    journal.reviewed_at = None
+    journal.submitted_at = datetime.utcnow()
+    
+    db.commit()
+    db.refresh(journal)
+    return journal
+
 @app.delete('/api/journals/{journal_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_journal(journal_id: str, user_id: str, db: Session = Depends(get_db)):
     """Delete a journal entry, only the author or admin can do this"""

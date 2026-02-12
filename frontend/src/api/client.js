@@ -100,6 +100,23 @@ export const api = {
     return response.json();
   },
 
+  // Update journal (edit & resubmit)
+  updateJournal: async (journalId, journalData, userId) => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/journals/${journalId}?user_id=${userId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(journalData),
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || "Failed to update journal");
+    }
+    return response.json();
+  },
+
   // Delete journal
   deleteJournal: async (journalId, userId) => {
     const response = await fetch(

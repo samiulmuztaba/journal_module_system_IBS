@@ -5,8 +5,9 @@ import Home from "./pages/Home";
 import JournalDetail from "./pages/JournalDetail";
 import ReviewerDashboard from "./pages/ReviewerDashboard";
 import CreateJournal from "./pages/CreateJournal";
-import Admindashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import ReviewJournal from "./pages/ReviewJournal";
+import EditJournal from "./pages/EditJournal";
 import { api } from "./api/client";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -90,7 +91,7 @@ function App() {
               !currentUser || currentUser.role !== "admin" ? (
                 <Navigate to="/" replace />
               ) : (
-                <Admindashboard journals={allJournals} currentUser={currentUser}/>
+                <AdminDashboard journals={allJournals} currentUser={currentUser} />
               )
             }
           />
@@ -101,6 +102,16 @@ function App() {
                 <Navigate to="/" replace />
               ) : (
                 <CreateJournal author_id={currentUser.id}/>
+              )
+            }
+          />
+          <Route
+            path="/edit-journal/:id"
+            element={
+              currentUser && currentUser.role === "writer" ? (
+                <EditJournal currentUser={currentUser} />
+              ) : (
+                <Navigate to="/" replace />
               )
             }
           />

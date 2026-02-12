@@ -42,7 +42,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home journals={journals} loadingJournals={loadingJournals} />}
+            element={<Home journals={[]} loadingJournals={loadingJournals} />}
           />
           <Route path="/login" element={!currentUser ? <Login onLogin={setCurrentUser} /> : <Navigate to="/" />} />
           <Route path="/register" element={!currentUser ? <Register onRegister={setCurrentUser}/> : <Navigate to="/" />}/>

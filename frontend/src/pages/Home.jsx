@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-export default function Home({ journals, currentUser }) {
+export default function Home({ journals }) {
 
   return (
     <div className="max-w-7xl mx-auto p-4">

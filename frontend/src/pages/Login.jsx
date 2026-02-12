@@ -23,36 +23,58 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div>
-      <div className="p-4 bg-white-100 boxshadow-black-100">
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            {error}
-          </div>
-        )}
-        <h2>Login</h2>
-        <form action="">
-          <label htmlFor="email">Email</label>
+    <div
+      className="flex justify-center align-middle"
+    >
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
+      )}
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-md mx-auto mt-16 bg-white p-8 rounded-2xl shadow-lg space-y-6"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="you@example.com"
           />
-          <label htmlFor="password">Password</label>
+        </div>
+
+        <div className="space-y-2">
+          <label
+            htmlFor="password"
+            className="text-sm font-medium text-gray-700"
+          >
+            Password
+          </label>
           <input
+            id="password"
             type="password"
-            name=""
-            id=""
-            placeholder="password"
             onChange={(e) => setPass(e.target.value)}
             required
+            placeholder="••••••••"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
           />
-          <button type="submit" onClick={handleSubmit} disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-      </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 rounded-lg transition duration-200"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
     </div>
   );
 }

@@ -22,7 +22,7 @@ function App() {
     setCurrentUser(null);
   };
 
-  if (currentUser) console.log(currentUser.role)
+  if (currentUser) console.log(currentUser.role);
 
   useEffect(() => {
     const fetchJournals = async () => {
@@ -102,21 +102,33 @@ function App() {
               !currentUser || currentUser.role !== "writer" ? (
                 <Navigate to="/" replace />
               ) : (
-                <CreateJournal />
+                <CreateJournal author_id={currentUser.id}/>
               )
             }
           />
           <Route
             path="/author-dashboard/:author_id"
-            element={<AuthorDashboard />}
+            element={
+              currentUser && currentUser.role == "writer" ? (
+                <AuthorDashboard
+                  currentUser={currentUser}
+                  journals={allJournals}
+                />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
           />
           <Route
             path="/review/:id"
             element={
-              (currentUser &&
+              currentUser &&
               (currentUser.role == "reviewer" ||
-                currentUser.role == "admin")) ? (
-                <ReviewJournal journals={allJournals} currentUser={currentUser} />
+                currentUser.role == "admin") ? (
+                <ReviewJournal
+                  journals={allJournals}
+                  currentUser={currentUser}
+                />
               ) : (
                 <Navigate to="/" replace />
               )

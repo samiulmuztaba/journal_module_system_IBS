@@ -1,21 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { api } from "../api/client";
 
-export default function CreateJournal() {
+export default function CreateJournal({ author_id }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     abstract: "",
     content: "",
-    tags: "",
+    tags: [],
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting journal:", formData);
-    // In real app: send to backend
-    alert("Journal submitted for review!");
-    navigate("/");
+    try {
+      const new_journal = await api.createJournal(formData, author_id);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      alert("Journal submitted for review!");
+      navigate("/");
+    }
   };
 
   return (
@@ -31,7 +37,9 @@ export default function CreateJournal() {
             type="text"
             required
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Enter journal title"
           />
@@ -45,7 +53,9 @@ export default function CreateJournal() {
             required
             rows="4"
             value={formData.abstract}
-            onChange={(e) => setFormData({ ...formData, abstract: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, abstract: e.target.value })
+            }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Brief summary of your journal"
           />
@@ -59,7 +69,9 @@ export default function CreateJournal() {
             required
             rows="10"
             value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, content: e.target.value })
+            }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Full journal content"
           />
@@ -72,7 +84,7 @@ export default function CreateJournal() {
           <input
             type="text"
             value={formData.tags}
-            onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, tags: [e.target.value] })}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="e.g., physics, quantum computing, engineering"
           />
